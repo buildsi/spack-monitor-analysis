@@ -53,8 +53,8 @@ RUN apt update -y \
   && rm -rf /usr/bin/python \
   && ln -s `which python3` /usr/bin/python || echo "No python 3"
 
-RUN python3 -m pip install --upgrade pip setuptools wheel \
- && python3 -m pip install gnureadline boto3 pyyaml pytz minio requests \
+RUN python -m pip install --upgrade pip setuptools wheel \
+ && python -m pip install gnureadline boto3 pyyaml pytz minio requests \
  && rm -rf ~/.cache
 
 ENV SPACK_ROOT=/opt/spack
@@ -63,7 +63,7 @@ ENV SPACK_ROOT=/opt/spack
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
-    python3 -m pip install clingo || spack install clingo-bootstrap && \
+    python -m pip install clingo || spack install clingo-bootstrap && \
     spack compiler find
 
 CMD ["/bin/bash"]
