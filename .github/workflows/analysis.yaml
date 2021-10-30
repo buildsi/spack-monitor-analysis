@@ -81,8 +81,8 @@ jobs:
           platforms: ${{ matrix.arch }}
           load: true
           tags: ${{ env.libname }}
-          build-args:
-            base: ${{ matrix.container }}
+          build-args: |
+            base=${{ matrix.container }}
 
       - name: Install and Analyze
         if: ${{ env.keepgoing == 'true' }}
