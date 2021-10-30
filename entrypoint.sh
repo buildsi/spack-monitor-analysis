@@ -34,7 +34,7 @@ spack compiler find
 
 # Each filename can have one or more spec names
 for spec in $(cat ${filename}); do
-    for compiler in $(spack compiler list); do
+    for compiler in $(spack compiler list --flat); do
         if [[ "${use_monitor}" == "true" ]]; then
             printf "spack install --monitor --all --monitor-tag smeagle $spec %$compiler\n"
             spack install --monitor --all --monitor-tag smeagle "$spec %$compiler"
