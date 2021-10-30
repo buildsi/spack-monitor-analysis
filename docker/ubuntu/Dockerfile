@@ -38,6 +38,8 @@ RUN apt update -y \
       patch \
       patchelf \
       pciutils \
+      python3 \
+      python3-dev \
       python3-pip \
       rsync \
       unzip \
@@ -51,9 +53,9 @@ RUN apt update -y \
   && rm -rf /usr/bin/python \
   && ln -s `which python3` /usr/bin/python || echo "No python 3"
 
-RUN python -m pip install --upgrade pip setuptools wheel \
- && python -m pip install gnureadline boto3 pyyaml pytz minio requests \
- && python -m pip install clingo || apt-get install -y gringo \
+RUN python3 -m pip install --upgrade pip setuptools wheel \
+ && python3 -m pip install gnureadline boto3 pyyaml pytz minio requests \
+ && python3 -m pip install clingo || apt-get install -y gringo \
  && rm -rf ~/.cache
 
 ENV SPACK_ROOT=/opt/spack
