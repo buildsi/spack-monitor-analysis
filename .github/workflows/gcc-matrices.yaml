@@ -107,5 +107,5 @@ jobs:
         file: ${{ env.filename }}
         platforms: 'linux/amd64,linux/ppc64le,linux/arm64'
         push: ${{ github.event_name != 'pull_request' }}
-        options: ${{ env.build_args }}
+        build-args: ${{ env.build_args }}
         tags: ghcr.io/buildsi/${{ env.container }}
