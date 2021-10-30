@@ -47,8 +47,7 @@ RUN apt update -y \
   && locale-gen en_US.UTF-8 \
   && apt autoremove --purge \
   && apt clean \
-  && ln -s /usr/bin/gpg /usr/bin/gpg2 \
-  && ln -s `which python3` /usr/bin/python
+  && ln -s /usr/bin/gpg /usr/bin/gpg2
 
 RUN python -m pip install --upgrade pip setuptools wheel \
  && python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
