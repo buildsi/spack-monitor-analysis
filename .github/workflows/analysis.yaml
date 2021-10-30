@@ -31,7 +31,7 @@ jobs:
                     'ghcr.io/buildsi/spack-centos-7',
                     'ghcr.io/buildsi/spack-centos-8',
                     'ghcr.io/buildsi/spack-fedora']
-        arch: ['linux/amd64','linux/ppc64le','linux/arm64']
+        arch: ['linux/amd64'] # ,'linux/ppc64le','linux/arm64']
         changed_file: ${{ fromJson(needs.changes.outputs.changed_file) }}
 
     container:
@@ -48,10 +48,12 @@ jobs:
           filename="${{ matrix.changed_file }}"
           printf "Found changed file ${filename}\n"
 
+          dobuild=false
           if [[ $filename == specs* ]]; then
               printf "Found specs file!\b"
               relname=$(basename $filename)
               libname=$(echo "${relname%.*}")
+              dobuild=true
           fi 
           echo "keepgoing=${dobuild}" >> $GITHUB_ENV
 
