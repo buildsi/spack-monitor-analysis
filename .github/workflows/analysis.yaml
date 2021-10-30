@@ -26,11 +26,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+                    # These containers have one tag (latest) across architectures
         container: ['ghcr.io/buildsi/spack-ubuntu-18.04',
                     'ghcr.io/buildsi/spack-ubuntu-20.04',
                     'ghcr.io/buildsi/spack-centos-7',
                     'ghcr.io/buildsi/spack-centos-8',
-                    'ghcr.io/buildsi/spack-fedora']
+                    'ghcr.io/buildsi/spack-fedora',
+                    
+                    # These have tags corresponding to gcc version and only amd64
+                    'ghcr.io/buildsi/ubuntu:gcc-8.1.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-7.3.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-9.4.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-11.2.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-4.9.4',
+                    'ghcr.io/buildsi/ubuntu:gcc-10.3.0']
+
         arch: ['linux/amd64'] # ,'linux/ppc64le','linux/arm64']
         changed_file: ${{ fromJson(needs.changes.outputs.changed_file) }}
 
