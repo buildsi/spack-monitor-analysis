@@ -65,8 +65,7 @@ jobs:
 
       - name: Run Build
         if: ${{ env.keepgoing == 'true' }}
-        run: |
-            ./entrypoint.sh ${{ libname }}
+        run: ./entrypoint.sh ${{ env.libname }}
 #      - name: Set up QEMU
 #        if: ${{ env.keepgoing == 'true' }}
 #        uses: docker/setup-qemu-action@v1
