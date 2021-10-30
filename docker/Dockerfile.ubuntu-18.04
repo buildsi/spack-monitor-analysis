@@ -1,6 +1,12 @@
-FROM ubuntu:18.04
+FROM ghcr.io/vsoch/gosmeagle as gobase
 
 # docker build -f Dockerfile.ubuntu-18.04 -t ghcr.io/buildsi/spack-ubuntu-18.04 .
+
+FROM ubuntu:18.04
+
+COPY --from=gobase /usr/local/go/ /usr/local/go/
+COPY --from=gobase /src/ /src/
+ENV PATH /usr/local/go/bin:/src/:${PATH}
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Los_Angeles
