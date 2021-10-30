@@ -36,8 +36,8 @@ jobs:
 
     container:
       image: ${{ matrix.container }}
-      options:
-        - platform=${{ matrix.arch }} 
+      options: |
+        platform=${{ matrix.arch }} 
 
     name: ${{ matrix.changed_file }} ${{ matrix.container }} ${{ matrix.arch }}
     steps:
