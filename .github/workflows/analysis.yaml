@@ -61,5 +61,5 @@ jobs:
 
       - name: Run Build
         run: |
-           printf "Preparing to run ${{ env.filename }}\n"
-           /bin/bash ./entrypoint.sh ${{ env.filename }}
+           printf "Preparing to run ${{ matrix.changed_file }}\n"
+           /bin/bash ./entrypoint.sh ${{ matrix.changed_file }}
