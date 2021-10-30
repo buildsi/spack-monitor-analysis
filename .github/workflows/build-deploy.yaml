@@ -1,12 +1,8 @@
 name: Build Containers
 on:
-  # Build container images nightly
-  schedule:
-    - cron: '0 2 5 * *'
+  # Build container images on request
+  workflow_dispatch: []
 
-  pull_request:
-    branches:
-      - main
 
 
 jobs:
