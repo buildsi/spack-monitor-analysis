@@ -16,7 +16,7 @@ fi
 filedir=$(dirname $filename)
 if [ "$filedir" != "specs" ]; then
     printf "$filedir is not in specs, skipping\n"
-    exit 1
+    exit 0
 fi
 
 # Ensure we have SPACKMON_USER/SPACKMON_TOKEN in environment
@@ -51,7 +51,7 @@ for spec in $(cat ${filename}); do
             printf "spack install --all $spec %$compiler\n"
             spack install --all "$spec %$compiler"
             printf "spack analyze run --analyzer smeagle --recursive --all $spec %%$compiler\n"
-            spack analyze run --analyzer smeagle --recursive --all "$spec %%$compiler"
+            spack analyze run --analyzer smeagle --recursive --all "$spec %$compiler"
         fi
     done
 done
