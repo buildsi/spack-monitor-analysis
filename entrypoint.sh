@@ -29,16 +29,17 @@ fi
 # always build with debug!
 export SPACK_ADD_DEBUG_FLAGS=true
 
+spack compiler find
 for spec in $(cat ${filename}); do
     if [[ "${use_monitor}" == "true" ]]; then
         printf "spack install --monitor --all --monitor-tag smeagle $spec\n"
-        spack install --monitor --all --monitor-tag smeagle $spec
-        spack analyze --monitor run --analyzer smeagle --recursive --all $spec
+        spack install --monitor --all --monitor-tag smeagle "$spec"
+        spack analyze --monitor run --analyzer smeagle --recursive --all "$spec"
         printf "spack analyze --monitor run --analyzer smeagle --recursive --all $spec\n"
     else
         printf "spack install --all $spec\n"
-        spack install --all $spec
+        spack install --all "$spec"
         printf "spack analyze run --analyzer smeagle --recursive --all $spec\n"
-        spack analyze run --analyzer smeagle --recursive --all $spec
+        spack analyze run --analyzer smeagle --recursive --all "$spec"
     fi
 done
