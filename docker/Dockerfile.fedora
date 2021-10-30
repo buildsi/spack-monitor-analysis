@@ -5,7 +5,7 @@ FROM fedora
 ENV TZ=America/Los_Angeles
 
 RUN dnf update -y \
-      && dnf install -y 
+      && dnf install -y \
       autoconf \
       automake \
       bzip2 \
