@@ -62,7 +62,6 @@ jobs:
         if: ${{ env.keepgoing == 'true' }}
         run: |
           rm -rf /usr/share/dotnet
-          rm -rf /opt/ghc
 
       - name: Set up QEMU
         if: ${{ env.keepgoing == 'true' }}
