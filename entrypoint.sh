@@ -29,6 +29,9 @@ fi
 # always build with debug!
 export SPACK_ADD_DEBUG_FLAGS=true
 
+# Just in case this was not run (but it should have been!)
+spack compiler find
+
 # Each filename can have one or more spec names
 for spec in $(cat ${filename}); do
     for compiler in $(spack compiler list); do
