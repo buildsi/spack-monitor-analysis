@@ -1,6 +1,12 @@
-FROM fedora
+FROM ghcr.io/vsoch/gosmeagle as gobase
 
 # docker build -f Dockerfile.fedora -t ghcr.io/buildsi/spack-fedora .
+
+FROM fedora
+
+COPY --from=gobase /usr/local/go/ /usr/local/go/
+COPY --from=gobase /src/ /src/
+ENV PATH /usr/local/go/bin:/src/:${PATH}
 
 ENV TZ=America/Los_Angeles
 
@@ -36,15 +42,22 @@ RUN dnf update -y \
       unzip \
       wget \
       zlib-devel \
+      clang \
   && dnf autoremove -y \
   && dnf clean all
 
 RUN python3 -m pip install --upgrade pip setuptools wheel \
  && python3 -m pip install boto3 pyyaml pytz minio requests clingo \
  && rm -rf ~/.cache
-    
-RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack
 
+ENV SPACK_ROOT=/opt/spack
+    
+# This might be too slow to run
+RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
+    cd /opt/spack && \
+    . share/spack/setup-env.sh && \
+    spack compiler find
+ 
 CMD ["/bin/bash"]
 
 ENV PATH=/opt/spack/bin:$PATH \

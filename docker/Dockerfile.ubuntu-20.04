@@ -1,6 +1,12 @@
-FROM ubuntu:20.04
+FROM ghcr.io/vsoch/gosmeagle as gobase
 
 # docker build -f Dockerfile.ubuntu-18.04 -t ghcr.io/buildsi/spack-ubuntu-20.04 .
+
+FROM ubuntu:20.04
+
+COPY --from=gobase /usr/local/go/ /usr/local/go/
+COPY --from=gobase /src/ /src/
+ENV PATH /usr/local/go/bin:/src/:${PATH}
 
 ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Los_Angeles
@@ -39,6 +45,7 @@ RUN apt update -y \
       unzip \
       wget \
       zlib1g-dev \
+      clang \
   && locale-gen en_US.UTF-8 \
   && apt autoremove --purge \
   && apt clean \
@@ -48,8 +55,14 @@ RUN apt update -y \
 RUN python -m pip install --upgrade pip setuptools wheel \
  && python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
  && rm -rf ~/.cache
+
+ENV SPACK_ROOT=/opt/spack
     
-RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack
+# This might be too slow to run
+RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
+    cd /opt/spack && \
+    . share/spack/setup-env.sh && \
+    spack compiler find
 
 CMD ["/bin/bash"]
 

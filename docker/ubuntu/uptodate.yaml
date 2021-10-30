@@ -1,0 +1,12 @@
+dockerbuild:
+
+  build_args:
+    gcc_version:
+      key: gcc
+      versions:
+       - "4.9.4"
+       - "7.3.0"
+       - "8.1.0"
+       - "9.4.0"
+       - "10.3.0"
+       - "11.2.0"

@@ -1,8 +1,6 @@
+ARG gcc_version
 FROM ghcr.io/vsoch/gosmeagle as gobase
-
-# docker build -f Dockerfile.ubuntu-18.04 -t ghcr.io/buildsi/spack-ubuntu-18.04 .
-
-FROM ubuntu:18.04
+FROM gcc:${gcc_version}
 
 COPY --from=gobase /usr/local/go/ /usr/local/go/
 COPY --from=gobase /src/ /src/
@@ -12,7 +10,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Los_Angeles
 
 RUN apt update -y \
-      && apt install -y \
+  && apt install -y \
       autoconf \
       automake \
       bzip2 \
@@ -23,7 +21,7 @@ RUN apt update -y \
       g++ \
       gcc \
       gettext \
-      gfortran \
+      gfortran \ 
       git \
       gpg \
       iputils-ping \
@@ -40,7 +38,6 @@ RUN apt update -y \
       patch \
       patchelf \
       pciutils \
-      python3-pip \
       rsync \
       unzip \
       wget \
@@ -49,14 +46,19 @@ RUN apt update -y \
   && locale-gen en_US.UTF-8 \
   && apt autoremove --purge \
   && apt clean \
-  && ln -s /usr/bin/gpg /usr/bin/gpg2
+  && ln -s /usr/bin/gpg /usr/bin/gpg2 || echo "No gpg" \
+  && rm -rf /usr/bin/python \
+  && ln -s `which python3` /usr/bin/python || echo "No python 3"
 
-RUN python3 -m pip install --upgrade pip setuptools wheel \
- && python3 -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
- && rm -rf ~/.cache
 
-ENV SPACK_ROOT=/opt/spack    
+RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh && \
+    bash Anaconda3-2021.05-Linux-x86_64.sh -p /opt/anaconda3 -b && \
+    export PATH=/opt/anaconda3/bin:$PATH && \
+    python -m pip install --upgrade pip setuptools wheel && \
+    python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo 
 
+ENV SPACK_ROOT=/opt/spack
+    
 # This might be too slow to run
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
@@ -65,7 +67,7 @@ RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
 
 CMD ["/bin/bash"]
 
-ENV PATH=/opt/spack/bin:$PATH \
+ENV PATH=/opt/anaconda3/bin:/opt/spack/bin:$PATH \
     NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=compute,utility \
     LANGUAGE=en_US:en \
