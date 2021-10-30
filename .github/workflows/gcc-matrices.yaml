@@ -94,7 +94,7 @@ jobs:
         # Get relative path to PWD and generate dashed name from it
         cd $basedir
         echo "${prefix} -t ${container} ."
-        build_args="--$(echo "${prefix#*--}")"
+        build_args="$(echo "${prefix#*--build-arg}")"
         echo "dockerfile_dir=${basedir}" >> $GITHUB_ENV
         echo "build_args=${build_args}" >> $GITHUB_ENV
         echo "container=${container}" >> $GITHUB_ENV
