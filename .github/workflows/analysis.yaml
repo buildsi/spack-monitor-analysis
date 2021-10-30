@@ -61,8 +61,8 @@ jobs:
       - name: Make Space For Build
         if: ${{ env.keepgoing == 'true' }}
         run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /opt/ghc
+          rm -rf /usr/share/dotnet
+          rm -rf /opt/ghc
 
       - name: Set up QEMU
         if: ${{ env.keepgoing == 'true' }}
