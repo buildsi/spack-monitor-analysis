@@ -61,7 +61,7 @@ RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     . share/spack/setup-env.sh && \
     spack install gcc@11.1.0 && spack load gcc@11.1.0 && spack compiler find && \
     spack install gcc@9.4.0 && spack load gcc@9.4.0 && spack compiler find && \
-    spack install gcc@7.5.0 && spack load gcc@7.5.0 && spack compiler find
+    spack install gcc@7.5.0 && spack load gcc@7.5.0 && spack compiler find && \
     spack install intel@20.0.4 && spack load intel@20.0.4 && spack compiler find && \
     spack install intel@19.0.1 && spack load intel@19.0.1 && spack compiler find && \
     spack install intel@17.0.1 && spack load intel@17.0.1 && spack compiler find
