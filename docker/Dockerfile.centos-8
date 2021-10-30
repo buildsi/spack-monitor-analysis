@@ -33,6 +33,7 @@ RUN yum update -y \
       patchelf \     
       pciutils \
       python3-pip \
+      python3-devel \
       rsync \
       unzip \
       wget \
