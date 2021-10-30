@@ -57,10 +57,10 @@ jobs:
         run: |
           filename="${{ matrix.changed_file }}"
           printf "Found changed file ${filename}\n"
-
+          dirname=$(python -c "import os; print(os.path.dirname('$filename'))")
           dobuild=false
-          if [[ $filename == specs* ]]; then
-              printf "Found specs file!\b"
+          if [[ "$dirname" == "specs" ]]; then
+              printf "Found specs file!\n"
               relname=$(basename $filename)
               libname=$(echo "${relname%.*}")
               dobuild=true

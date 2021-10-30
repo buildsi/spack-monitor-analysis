@@ -36,15 +36,15 @@ spack compiler find
 for spec in $(cat ${filename}); do
     for compiler in $(spack compiler list --flat); do
         if [[ "${use_monitor}" == "true" ]]; then
-            printf "spack install --monitor --all --monitor-tag smeagle $spec %$compiler\n"
+            printf "spack install --monitor --all --monitor-tag smeagle $spec %%$compiler\n"
             spack install --monitor --all --monitor-tag smeagle "$spec %$compiler"
-            printf "spack analyze --monitor run --analyzer smeagle --recursive --all $spec %$compiler\n"
+            printf "spack analyze --monitor run --analyzer smeagle --recursive --all $spec %%$compiler\n"
             spack analyze --monitor run --analyzer smeagle --recursive --all "$spec %$compiler"
         else
             printf "spack install --all $spec %$compiler\n"
             spack install --all "$spec %$compiler"
-            printf "spack analyze run --analyzer smeagle --recursive --all $spec %$compiler\n"
-            spack analyze run --analyzer smeagle --recursive --all "$spec %$compiler"
+            printf "spack analyze run --analyzer smeagle --recursive --all $spec %%$compiler\n"
+            spack analyze run --analyzer smeagle --recursive --all "$spec %%$compiler"
         fi
     done
 done
