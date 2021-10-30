@@ -82,7 +82,7 @@ jobs:
           load: true
           tags: ${{ env.libname }}
           build-args:
-            - base=${{ matrix.container }}
+            base: ${{ matrix.container }}
 
       - name: Install and Analyze
         if: ${{ env.keepgoing == 'true' }}
