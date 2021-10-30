@@ -1,7 +1,5 @@
 name: Build Containers
-on:
-  # Build container images on request
-  workflow_dispatch: []
+on: workflow_dispatch
 
 
 
