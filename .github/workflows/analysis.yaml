@@ -56,6 +56,7 @@ jobs:
               dobuild=true
           fi 
           echo "keepgoing=${dobuild}" >> $GITHUB_ENV
+          echo "filename=${filename}" >> $GITHUB_ENV
 
       - name: Make Space For Build
         if: ${{ env.keepgoing == 'true' }}
@@ -66,28 +67,6 @@ jobs:
 
       - name: Run Build
         if: ${{ env.keepgoing == 'true' }}
-        run: ./entrypoint.sh ${{ env.libname }}
-#      - name: Set up QEMU
-#        if: ${{ env.keepgoing == 'true' }}
-#        uses: docker/setup-qemu-action@v1
-
-#      - name: Set up Docker Buildx
-#        if: ${{ env.keepgoing == 'true' }}
-#        uses: docker/setup-buildx-action@v1
-
-#      - name: Build and export to Docker
-#        if: ${{ env.keepgoing == 'true' }}
-#        uses: docker/build-push-action@v2
-#        with:
-#          cache-from: type=gha
-#          cache-to: type=gha,mode=max
-#          platforms: ${{ matrix.arch }}
-#          load: true
-#          tags: ${{ env.libname }}
-#          build-args: |
-#            base=${{ matrix.container }}
-
-#      - name: Install and Analyze
-#        if: ${{ env.keepgoing == 'true' }}
-#        run: |
-#          docker run --it --platform=${{ matrix.arch }} --rm ${{ env.libname }} ${{ env.filename }}
+        run: |
+           printf "Preparing to run ${{ env.filename }}\n"
+           /bin/bash ./entrypoint.sh ${{ env.filename }}
