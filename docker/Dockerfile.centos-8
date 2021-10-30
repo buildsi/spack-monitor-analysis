@@ -1,9 +1,12 @@
-FROM centos:8
+FROM ghcr.io/vsoch/gosmeagle as gobase
 
 # docker build -f Dockerfile.centos-8 -t ghcr.io/buildsi/spack-centos-8 .
 
+FROM centos:8
+COPY --from=gobase /usr/local/go/ /usr/local/go/
+COPY --from=gobase /src/ /src/
+ENV PATH /usr/local/go/bin:/src/:${PATH}
 ENV TZ=America/Los_Angeles
-
 RUN yum update -y \
       && yum install -y epel-release \
       && yum install -y \
