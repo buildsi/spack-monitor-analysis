@@ -1,6 +1,5 @@
-FROM ghcr.io/vsoch/gosmeagle as gobase
-
 ARG gcc_version
+FROM ghcr.io/vsoch/gosmeagle as gobase
 FROM gcc:${gcc_version}
 
 COPY --from=gobase /usr/local/go/ /usr/local/go/
