@@ -47,9 +47,9 @@ jobs:
           filename="${{ matrix.changed_file }}"
           printf "Found changed file ${filename}\n"
 
-          dobuild=no
+          dobuild=false
           if [[ $filename == specs* ]]; then
-              dobuild=yes
+              dobuild=true
               printf "Found specs file!\b"
           fi 
           relname=$(basename $filename)
