@@ -89,7 +89,6 @@ jobs:
         filename: ${{ matrix.result.filename }}
       run: |
         basedir=$(dirname $filename)
-        filename=$(basename $filename)
         printf "Base directory is ${basedir}\n"
         # Get relative path to PWD and generate dashed name from it
         cd $basedir
