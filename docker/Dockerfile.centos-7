@@ -53,12 +53,10 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
  && python3 -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
  && rm -rf ~/.cache
 
-# This might be too slow to run
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
-    spack install gcc@11.1.0 && spack load gcc@11.1.0 && spack compiler find && \
-    spack install intel@20.0.4 && spack load intel@20.0.4 && spack compiler find
+    spack compiler find
 
 CMD ["/bin/bash"]
 

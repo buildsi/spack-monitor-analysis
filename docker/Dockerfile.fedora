@@ -56,9 +56,8 @@ ENV SPACK_ROOT=/opt/spack
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
-    spack install gcc@11.1.0 && spack load gcc@11.1.0 && spack compiler find && \
-    spack install intel@20.0.4 && spack load intel@20.0.4 && spack compiler find
-
+    spack compiler find
+ 
 CMD ["/bin/bash"]
 
 ENV PATH=/opt/spack/bin:$PATH \

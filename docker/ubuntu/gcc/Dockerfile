@@ -1,8 +1,7 @@
 FROM ghcr.io/vsoch/gosmeagle as gobase
 
-# docker build -f Dockerfile.ubuntu-18.04 -t ghcr.io/buildsi/spack-ubuntu-18.04 .
-
-FROM ubuntu:18.04
+ARG gcc_version
+FROM gcc:${gcc_version}
 
 COPY --from=gobase /usr/local/go/ /usr/local/go/
 COPY --from=gobase /src/ /src/
@@ -12,7 +11,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Los_Angeles
 
 RUN apt update -y \
-      && apt install -y \
+  && apt install -y \
       autoconf \
       automake \
       bzip2 \
@@ -23,7 +22,7 @@ RUN apt update -y \
       g++ \
       gcc \
       gettext \
-      gfortran \
+      gfortran \ 
       git \
       gpg \
       iputils-ping \
@@ -49,22 +48,15 @@ RUN apt update -y \
   && locale-gen en_US.UTF-8 \
   && apt autoremove --purge \
   && apt clean \
-  && ln -s /usr/bin/gpg /usr/bin/gpg2
+  && ln -s /usr/bin/gpg /usr/bin/gpg2 \
+  && ln -s `which python3` /usr/bin/python
 
-# Install other versions of gcc
-RUN apt-get install -y software-properties-common && \
-    add-apt-repository 'deb http://mirrors.kernel.org/ubuntu hirsute main universe' && \
-    apt-get update && \
-    apt-get install -y gcc-11 g++-11 && \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70 --slave /usr/bin/g++ g++ /usr/bin/g++-7 --slave /usr/bin/gcov gcov /usr/bin/gcov-7 --slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-7 --slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-7 && \
-    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-11 110 --slave /usr/bin/g++ g++ /usr/bin/g++-11 --slave /usr/bin/gcov gcov /usr/bin/gcov-11 --slave /usr/bin/gcc-ar gcc-ar /usr/bin/gcc-ar-11 --slave /usr/bin/gcc-ranlib gcc-ranlib /usr/bin/gcc-ranlib-11;
-
-RUN python3 -m pip install --upgrade pip setuptools wheel \
- && python3 -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
+RUN python -m pip install --upgrade pip setuptools wheel \
+ && python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
  && rm -rf ~/.cache
 
-ENV SPACK_ROOT=/opt/spack    
-
+ENV SPACK_ROOT=/opt/spack
+    
 # This might be too slow to run
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
