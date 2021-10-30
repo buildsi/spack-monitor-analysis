@@ -41,14 +41,21 @@ RUN yum update -y \
       unzip \
       wget \
       zlib-devel \
+      clang \
+      
   && yum autoremove -y \
   && yum clean all
+
+ENV SPACK_ROOT=/opt/spack
 
 RUN python3 -m pip install --upgrade pip setuptools wheel \
  && python3 -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
  && rm -rf ~/.cache
     
-RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack
+RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
+    cd /opt/spack && \
+    . share/spack/setup-env.sh && \
+    spack compiler find
 
 CMD ["/bin/bash"]
 

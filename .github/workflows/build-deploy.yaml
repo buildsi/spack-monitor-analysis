@@ -1,13 +1,13 @@
 name: Build Containers
 on: workflow_dispatch
 
-
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
       packages: write
     strategy:
+      fail-fast: false
       matrix:
                     # tag           dockerfile in docker/     platforms
         dockerfile: [[ubuntu-18.04, Dockerfile.ubuntu-18.04, 'linux/amd64,linux/ppc64le,linux/arm64'],
