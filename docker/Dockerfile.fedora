@@ -42,6 +42,7 @@ RUN dnf update -y \
       unzip \
       wget \
       zlib-devel \
+      clang \
   && dnf autoremove -y \
   && dnf clean all
 
