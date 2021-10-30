@@ -55,7 +55,6 @@ RUN apt update -y \
 
 RUN python3 -m pip install --upgrade pip setuptools wheel \
  && python3 -m pip install gnureadline boto3 pyyaml pytz minio requests \
- && python3 -m pip install clingo || apt-get install -y gringo \
  && rm -rf ~/.cache
 
 ENV SPACK_ROOT=/opt/spack
@@ -64,6 +63,7 @@ ENV SPACK_ROOT=/opt/spack
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
+    python3 -m pip install clingo || spack install clingo-bootstrap && \
     spack compiler find
 
 CMD ["/bin/bash"]
