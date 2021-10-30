@@ -12,6 +12,13 @@ if [ ! -f "${filename}" ]; then
     exit 1;
 fi
 
+# If it's not in the right directory
+filedir=$(dirname $filename)
+if [ "$filedir" != "specs" ]; then
+    printf "$filedir is not in specs, skipping\n"
+    exit 1
+fi
+
 # Ensure we have SPACKMON_USER/SPACKMON_TOKEN in environment
 use_monitor="true"
 if [[ -z "${SPACKMON_USER}" ]]; then

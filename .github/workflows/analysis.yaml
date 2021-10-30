@@ -53,30 +53,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Check that file exists
-        run: |
-          filename="${{ matrix.changed_file }}"
-          printf "Found changed file ${filename}\n"
-          dirname=$(python -c "import os; print(os.path.dirname('$filename'))")
-          dobuild="false"
-
-          if [[ "$dirname" == "specs" ]]; then
-              printf "Found specs file!\n"
-              dobuild="true"
-          fi 
-
-          echo "keepgoing=${dobuild}" >> $GITHUB_ENV
-          echo "filename=${filename}" >> $GITHUB_ENV
-
       - name: Make Space For Build
-        if: ${{ env.keepgoing == 'true' }}
         run: |        
           ls /usr/share
           rm -rf /usr/share/dotnet
           rm -rf /opt/ghc
 
       - name: Run Build
-        if: ${{ env.keepgoing == 'true' }}
         run: |
            printf "Preparing to run ${{ env.filename }}\n"
            /bin/bash ./entrypoint.sh ${{ env.filename }}
