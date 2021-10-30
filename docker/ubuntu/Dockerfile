@@ -38,9 +38,6 @@ RUN apt update -y \
       patch \
       patchelf \
       pciutils \
-      python3 \
-      python3-dev \
-      python3-pip \
       rsync \
       unzip \
       wget \
@@ -53,9 +50,12 @@ RUN apt update -y \
   && rm -rf /usr/bin/python \
   && ln -s `which python3` /usr/bin/python || echo "No python 3"
 
-RUN python -m pip install --upgrade pip setuptools wheel || python3 -m pip install --upgrade pip setuptools wheel \
- && python -m pip install gnureadline boto3 pyyaml pytz minio requests || python3 -m pip install gnureadline boto3 pyyaml pytz minio requests \
- && rm -rf ~/.cache
+
+RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh && \
+    bash Anaconda3-2021.05-Linux-x86_64.sh -p /opt/anaconda3 -b && \
+    export PATH=/opt/anaconda3/bin:$PATH && \
+    python -m pip install --upgrade pip setuptools wheel && \
+    python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo 
 
 ENV SPACK_ROOT=/opt/spack
     
@@ -63,12 +63,11 @@ ENV SPACK_ROOT=/opt/spack
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
-    python -m pip install clingo || python3 -m pip install clingo || spack install clingo-bootstrap && \
     spack compiler find
 
 CMD ["/bin/bash"]
 
-ENV PATH=/opt/spack/bin:$PATH \
+ENV PATH=/opt/anaconda3/bin:/opt/spack/bin:$PATH \
     NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=compute,utility \
     LANGUAGE=en_US:en \
