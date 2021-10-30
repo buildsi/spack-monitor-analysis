@@ -14,7 +14,7 @@ RUN yum update -y \
       curl \
       file \
       findutils \
-      g++ \
+      gcc-c++ \
       gcc \
       gettext \
       gcc-gfortran \
