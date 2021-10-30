@@ -37,7 +37,7 @@ jobs:
     container:
       image: ${{ matrix.container }}
 
-    name: Build ${{ matrix.container }}
+    name: ${{ matrix.changed_file }} ${{ matrix.container }} ${{ matrix.arch }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
