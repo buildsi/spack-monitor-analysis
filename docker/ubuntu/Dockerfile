@@ -47,7 +47,7 @@ RUN apt update -y \
   && locale-gen en_US.UTF-8 \
   && apt autoremove --purge \
   && apt clean \
-  && ln -s /usr/bin/gpg /usr/bin/gpg2 || echo "No gpg"
+  && ln -s /usr/bin/gpg /usr/bin/gpg2 || echo "No gpg" \
   && ln -s `which python3` /usr/bin/python || echo "No python 3"
 
 RUN python -m pip install --upgrade pip setuptools wheel \
