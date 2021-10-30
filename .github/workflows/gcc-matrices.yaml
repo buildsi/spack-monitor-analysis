@@ -1,11 +1,6 @@
 name: GCC Build Matrices
 
-on: 
-  # On pull request we test updates to images
-  pull_request: []
- 
-  # On push to main we build and deploy images
-  workflow_dispatch: []
+on: workflow_dispatch
 
 jobs:
   generate:
