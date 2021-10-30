@@ -58,19 +58,19 @@ jobs:
           filename="${{ matrix.changed_file }}"
           printf "Found changed file ${filename}\n"
           dirname=$(python -c "import os; print(os.path.dirname('$filename'))")
-          dobuild=false
+          dobuild="false"
+
           if [[ "$dirname" == "specs" ]]; then
               printf "Found specs file!\n"
-              relname=$(basename $filename)
-              libname=$(echo "${relname%.*}")
-              dobuild=true
+              dobuild="true"
           fi 
+
           echo "keepgoing=${dobuild}" >> $GITHUB_ENV
           echo "filename=${filename}" >> $GITHUB_ENV
 
       - name: Make Space For Build
         if: ${{ env.keepgoing == 'true' }}
-        run: |
+        run: |        
           ls /usr/share
           rm -rf /usr/share/dotnet
           rm -rf /opt/ghc
