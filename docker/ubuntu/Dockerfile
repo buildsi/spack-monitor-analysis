@@ -52,7 +52,8 @@ RUN apt update -y \
   && ln -s `which python3` /usr/bin/python || echo "No python 3"
 
 RUN python -m pip install --upgrade pip setuptools wheel \
- && python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo \
+ && python -m pip install gnureadline boto3 pyyaml pytz minio requests \
+ && python -m pip install clingo || apt-get install -y gringo \
  && rm -rf ~/.cache
 
 ENV SPACK_ROOT=/opt/spack
