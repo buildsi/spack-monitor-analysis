@@ -71,5 +71,4 @@ ENV PATH=/opt/anaconda3/bin:/opt/spack/bin:$PATH \
     NVIDIA_VISIBLE_DEVICES=all \
     NVIDIA_DRIVER_CAPABILITIES=compute,utility \
     LANGUAGE=en_US:en \
-    LANG=en_US.UTF-8 \
-    LC_ALL=en_US.UTF-8
+    LANG=en_US.UTF-8
