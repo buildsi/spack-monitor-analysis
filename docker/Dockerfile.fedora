@@ -38,6 +38,7 @@ RUN dnf update -y \
       patchelf \     
       pciutils \
       python3-pip \
+      python3-dev \
       rsync \
       unzip \
       wget \
