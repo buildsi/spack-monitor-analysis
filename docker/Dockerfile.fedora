@@ -53,7 +53,6 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
 
 ENV SPACK_ROOT=/opt/spack
     
-# This might be too slow to run
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
