@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [ "$#" -eq 0 ]; then
-    printf "Please provide a package filename as the only argument.\n"
+    printf "Please provide a package filename and (optionally) an analyzer as arguments.\n"
     exit 1
 fi
 
@@ -11,6 +11,8 @@ if [ ! -f "${filename}" ]; then
     printf "${filename} does not exist!\n"
     exit 1;
 fi
+
+analyzer="${2:-symbolator}"
 
 # If it's not in the right directory
 filedir=$(dirname $filename)
@@ -43,15 +45,15 @@ spack compiler find
 for spec in $(cat ${filename}); do
     for compiler in $(spack compiler list --flat); do
         if [[ "${use_monitor}" == "true" ]]; then
-            printf "spack install --monitor --all --monitor-tag symbolator $spec ${compiler}\n"
-            spack install --monitor --all --monitor-tag symbolator "$spec %$compiler"
-            printf "spack analyze --monitor run --analyzer symbolator --recursive --all $spec $compiler\n"
-            spack analyze --monitor run --analyzer symbolator --recursive --all "$spec %$compiler"
+            printf "spack install --monitor --all --monitor-tag ${analyzer} $spec ${compiler}\n"
+            spack install --monitor --all --monitor-tag "${analyzer}" "$spec %$compiler"
+            printf "spack analyze --monitor run --analyzer ${analyzer} --recursive --all $spec $compiler\n"
+            spack analyze --monitor run --analyzer "${analyzer}" --recursive --all "$spec %$compiler"
         else
             printf "spack install --all $spec $compiler\n"
             spack install --all "$spec %$compiler"
-            printf "spack analyze run --analyzer symbolator --recursive --all $spec $compiler\n"
-            spack analyze run --analyzer symbolator --recursive --all "$spec %$compiler"
+            printf "spack analyze run --analyzer ${analyzer} --recursive --all $spec $compiler\n"
+            spack analyze run --analyzer "${analyzer}" --recursive --all "$spec %$compiler"
         fi
     done
 done

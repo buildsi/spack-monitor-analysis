@@ -5,10 +5,10 @@ on:
       package:
         description: 'Name of spack package to test'
         required: true
-      home:
-        description: 'location'
+      analyzer:
+        description: 'Spack analyzer to run (defaults to symbolator)'
         required: false
-        default: 'The Octoverse'
+        default: 'symbolator'
 
 jobs:
   build:
