@@ -10,6 +10,36 @@ spack monitor, and for building and deploying:
 It's also setup to handle architectures, but we need to host runners to do that.
 I'm not sure if this will all work, but it sounded fun to try.
 
+## Instructions
+
+### Updating base containers
+
+The base containers are built with the following GitHub workflows:
+
+ - [.github/workflows/gcc-matrices.yaml](.github/workflows/gcc-matrices.yaml): builds gcc base images with spack, smeagle, and symbolator, across gcc versions
+ - [.github/workflows/build-deploy.yaml](.github/workflows/build-deploy.yaml): builds the same across ubuntu, centos, and a fedora container, each with a few compilers.
+ 
+To run any of these updates, simply push to a branch, navigate to the "Actions" tab, and then select either of the two workflows:
+
+ - GCC Build Matrices
+ - Build Containers
+ 
+
+And click "Run workflow" and select the branch to trigger. The finished containers will then be pushed to GitHub packages and ready
+for use by the analysis pipeline.
+
+### Running an Analysis
+
+The install and analysis for a package across versions with some set of compilers is done with:
+
+ - [.github/workflows/analysis.yaml](.github/workflows/analysis.yaml) 
+
+The trigger is also a dispatch event, except you need to also enter the package name and analyzer to run.
+
+![img/analysis.png](img/analysis.png)
+
+Analyses are uploaded to spack monitor.
+
 ## Analysis Plan
 
 This is what I'm planning to do for a "base level" analysis. The goal is to understand the build space (what builds and what doesn't across packages and compilers, limited by spack) and then to simulate splices, and predict working / not working for each. Then when Nate's splicing
