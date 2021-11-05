@@ -1,0 +1,57 @@
+name: Spack Monitor Analysis
+on:
+  workflow_dispatch: 
+    inputs:
+      package:
+        description: 'Name of spack package to test'
+        required: true
+      analyzer:
+        description: 'Spack analyzer to run (defaults to symbolator)'
+        required: false
+        default: 'symbolator'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: read
+    strategy:
+      fail-fast: false
+      matrix:
+                    # These containers have one tag (latest) across architectures
+        container: ['ghcr.io/buildsi/spack-ubuntu-18.04',
+                    'ghcr.io/buildsi/spack-ubuntu-20.04',
+                    'ghcr.io/buildsi/spack-centos-7',
+                    'ghcr.io/buildsi/spack-centos-8',
+                    'ghcr.io/buildsi/spack-fedora',
+                    
+                    # These have tags corresponding to gcc version and only amd64
+                    'ghcr.io/buildsi/ubuntu:gcc-8.1.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-7.3.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-9.4.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-11.2.0',
+                    'ghcr.io/buildsi/ubuntu:gcc-4.9.4',
+                    'ghcr.io/buildsi/ubuntu:gcc-10.3.0']
+
+        arch: ['linux/amd64'] # ,'linux/ppc64le','linux/arm64']
+        package: ${{ github.event.inputs.package }}
+
+    container:
+      image: ${{ matrix.container }}
+      options: "--platform=${{ matrix.arch }}"
+
+    name: ${{ matrix.package }} ${{ matrix.container }} ${{ matrix.arch }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Make Space For Build
+        run: |        
+          ls /usr/share
+          rm -rf /usr/share/dotnet
+          rm -rf /opt/ghc
+
+      - name: Run Build
+        run: |
+           printf "Preparing to build ${{ matrix.package }}\n"
+           /bin/bash ./entrypoint.sh ${{ matrix.package }}
