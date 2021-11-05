@@ -23,6 +23,19 @@ if [[ -z "${SPACKMON_HOST}" ]]; then
     use_monitor="false"
 fi
 
+# These are set to control the environment variables - since the host metadata
+# determines a unique build, and we want github-actions builds across runners
+# to be "the same" if we don't set these they will be marked as different.
+# The right granularity is probably OS and version
+
+export SPACKMON_SPACK_VERSION="vsoch-db"
+export SPACKMON_HOSTNAME="github-actions-host"
+export SPACKMON_KERNEL_VERSION="github-actions-runner"
+# Host OS: debian10
+# Host Target: x86_64_v4
+# Platform: linux
+# Kernel Version: #21~20.04.1-Ubuntu SMP Mon Oct 11 18:54:28 UTC 2021 
+
 # Setup spack
 . /opt/spack/share/spack/setup-env.sh
 
