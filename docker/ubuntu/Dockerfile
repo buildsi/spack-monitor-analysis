@@ -58,6 +58,7 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh && 
     python -m pip install --upgrade pip setuptools wheel && \
     python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo 
 
+ENV PATH=/opt/anaconda3/bin:$PATH
 ENV SPACK_ROOT=/opt/spack
     
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
@@ -67,7 +68,8 @@ RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
 
 RUN git clone https://github.com/buildsi/symbolator && \
     cd symbolator && \
-    python3 setup.py install
+    export PATH=/opt/anaconda3/bin:$PATH && \
+    python -m pip install .
 
 CMD ["/bin/bash"]
 
