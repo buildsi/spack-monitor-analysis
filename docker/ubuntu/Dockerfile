@@ -38,6 +38,7 @@ RUN apt update -y \
       patch \
       patchelf \
       pciutils \
+      python3-dev \
       rsync \
       unzip \
       wget \
@@ -59,11 +60,14 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh && 
 
 ENV SPACK_ROOT=/opt/spack
     
-# This might be too slow to run
 RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
     spack compiler find
+
+RUN git clone https://github.com/buildsi/symbolator && \
+    cd symbolator && \
+    python3 setup.py install
 
 CMD ["/bin/bash"]
 
