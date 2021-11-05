@@ -34,7 +34,7 @@ jobs:
                     'ghcr.io/buildsi/ubuntu:gcc-10.3.0']
 
         arch: ['linux/amd64'] # ,'linux/ppc64le','linux/arm64']
-        package: ${{ github.event.inputs.package }}
+        package: ["${{ github.event.inputs.package }}"]
 
     container:
       image: ${{ matrix.container }}
