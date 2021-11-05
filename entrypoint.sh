@@ -18,6 +18,10 @@ if [[ -z "${SPACKMON_TOKEN}" ]]; then
     printf "SPACKMON_TOKEN not found in the environment, skipping monitor\n"
     use_monitor="false"
 fi
+if [[ -z "${SPACKMON_HOST}" ]]; then
+    printf "SPACKMON_HOST not found in the environment, skipping monitor\n"
+    use_monitor="false"
+fi
 
 # Setup spack
 . /opt/spack/share/spack/setup-env.sh
@@ -31,10 +35,10 @@ spack compiler find
 # Run a build for each pkg spec, all versions
 for compiler in $(spack compiler list --flat); do
     if [[ "${use_monitor}" == "true" ]]; then
-        printf "spack install --monitor --all --monitor-tag ${analyzer} $pkg ${compiler}\n"
-        spack install --monitor --all --monitor-tag "${analyzer}" "$pkg %$compiler"
-        printf "spack analyze --monitor run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
-        spack analyze --monitor run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
+        printf "spack install --monitor --monitor-host xxxxxxxxxx --all --monitor-tag ${analyzer} $pkg ${compiler}\n"
+        spack install --monitor --monitor-host "${SPACKMON_HOST}" --all --monitor-tag "${analyzer}" "$pkg %$compiler"
+        printf "spack analyze --monitor --monitor-host xxxxxxxxxx run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
+        spack analyze --monitor --monitor-host "${SPACKMON_HOST}" run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
     else
         printf "spack install --all $pkg $compiler\n"
         spack install --all "$pkg %$compiler"

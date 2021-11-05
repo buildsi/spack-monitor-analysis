@@ -55,6 +55,7 @@ jobs:
         env:
           SPACKMON_USER: ${{ secrets.SPACKMON_USER }}
           SPACKMON_TOKEN: ${{ secrets.SPACKMON_TOKEN }}
+          SPACKMON_HOST: ${{ secrets.SPACKMON_HOST }}
         run: |
            printf "Preparing to build ${{ matrix.package }}\n"
            /bin/bash ./entrypoint.sh ${{ matrix.package }}
