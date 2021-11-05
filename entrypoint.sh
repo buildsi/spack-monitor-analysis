@@ -11,11 +11,11 @@ analyzer="${2:-symbolator}"
 # Ensure we have SPACKMON_USER/SPACKMON_TOKEN in environment
 use_monitor="true"
 if [[ -z "${SPACKMON_USER}" ]]; then
-    printf "SPACKMON_USER not found in the environment, skipping monitor"
+    printf "SPACKMON_USER not found in the environment, skipping monitor\n"
     use_monitor="false"
 fi
 if [[ -z "${SPACKMON_TOKEN}" ]]; then
-    printf "SPACKMON_TOKEN not found in the environment, skipping monitor"
+    printf "SPACKMON_TOKEN not found in the environment, skipping monitor\n"
     use_monitor="false"
 fi
 

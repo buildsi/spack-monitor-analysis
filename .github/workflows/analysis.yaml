@@ -51,7 +51,10 @@ jobs:
           rm -rf /usr/share/dotnet
           rm -rf /opt/ghc
 
-      - name: Run Build
+      - name: Run Build and Analyze
+        env:
+          SPACKMON_USER: ${{ secrets.SPACKMON_USER }}
+          SPACKMON_TOKEN: ${{ secrets.SPACKMON_TOKEN }}
         run: |
            printf "Preparing to build ${{ matrix.package }}\n"
            /bin/bash ./entrypoint.sh ${{ matrix.package }}
