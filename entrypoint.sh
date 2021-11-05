@@ -5,21 +5,8 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
-# Check that file exists
-filename="${1}"
-if [ ! -f "${filename}" ]; then
-    printf "${filename} does not exist!\n"
-    exit 1;
-fi
-
+pkg="${1}"
 analyzer="${2:-symbolator}"
-
-# If it's not in the right directory
-filedir=$(dirname $filename)
-if [ "$filedir" != "specs" ]; then
-    printf "$filedir is not in specs, skipping\n"
-    exit 0
-fi
 
 # Ensure we have SPACKMON_USER/SPACKMON_TOKEN in environment
 use_monitor="true"
@@ -41,19 +28,17 @@ export SPACK_ADD_DEBUG_FLAGS=true
 # Just in case this was not run (but it should have been!)
 spack compiler find
 
-# Each filename can have one or more spec names
-for spec in $(cat ${filename}); do
-    for compiler in $(spack compiler list --flat); do
-        if [[ "${use_monitor}" == "true" ]]; then
-            printf "spack install --monitor --all --monitor-tag ${analyzer} $spec ${compiler}\n"
-            spack install --monitor --all --monitor-tag "${analyzer}" "$spec %$compiler"
-            printf "spack analyze --monitor run --analyzer ${analyzer} --recursive --all $spec $compiler\n"
-            spack analyze --monitor run --analyzer "${analyzer}" --recursive --all "$spec %$compiler"
-        else
-            printf "spack install --all $spec $compiler\n"
-            spack install --all "$spec %$compiler"
-            printf "spack analyze run --analyzer ${analyzer} --recursive --all $spec $compiler\n"
-            spack analyze run --analyzer "${analyzer}" --recursive --all "$spec %$compiler"
-        fi
-    done
+# Run a build for each pkg spec, all versions
+for compiler in $(spack compiler list --flat); do
+    if [[ "${use_monitor}" == "true" ]]; then
+        printf "spack install --monitor --all --monitor-tag ${analyzer} $pkg ${compiler}\n"
+        spack install --monitor --all --monitor-tag "${analyzer}" "$pkg %$compiler"
+        printf "spack analyze --monitor run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
+        spack analyze --monitor run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
+    else
+        printf "spack install --all $pkg $compiler\n"
+        spack install --all "$pkg %$compiler"
+        printf "spack analyze run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
+        spack analyze run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
+    fi
 done
