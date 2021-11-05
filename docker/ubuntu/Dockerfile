@@ -67,7 +67,7 @@ RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
 
 RUN git clone https://github.com/buildsi/symbolator && \
     cd symbolator && \
-    python3 setup.py install
+    python -m pip install .
 
 CMD ["/bin/bash"]
 
