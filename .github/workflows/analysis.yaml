@@ -1,25 +1,17 @@
 name: Spack Monitor Analysis
 on:
-  pull_request: []
-  push:
-    branches:
-      - main
+  workflow_dispatch: 
+    inputs:
+      package:
+        description: 'Name of spack package to test'
+        required: true
+      home:
+        description: 'location'
+        required: false
+        default: 'The Octoverse'
 
 jobs:
-  changes:
-    name: "Changed Files"
-    runs-on: ubuntu-latest
-    outputs:
-      changed_file: ${{ steps.files.outputs.added_modified }}
-    steps:
-      - id: files
-        uses: jitterbit/get-changed-files@b17fbb00bdc0c0f63fcf166580804b4d2cdc2a42
-        with:
-          format: 'json'
-
   build:
-    needs:
-      - changes
     runs-on: ubuntu-latest
     permissions:
       packages: read
@@ -42,13 +34,13 @@ jobs:
                     'ghcr.io/buildsi/ubuntu:gcc-10.3.0']
 
         arch: ['linux/amd64'] # ,'linux/ppc64le','linux/arm64']
-        changed_file: ${{ fromJson(needs.changes.outputs.changed_file) }}
+        package: ${{ github.event.inputs.package }}
 
     container:
       image: ${{ matrix.container }}
       options: "--platform=${{ matrix.arch }}"
 
-    name: ${{ matrix.changed_file }} ${{ matrix.container }} ${{ matrix.arch }}
+    name: ${{ matrix.package }} ${{ matrix.container }} ${{ matrix.arch }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -61,5 +53,5 @@ jobs:
 
       - name: Run Build
         run: |
-           printf "Preparing to run ${{ matrix.changed_file }}\n"
-           /bin/bash ./entrypoint.sh ${{ matrix.changed_file }}
+           printf "Preparing to build ${{ matrix.package }}\n"
+           /bin/bash ./entrypoint.sh ${{ matrix.package }}
