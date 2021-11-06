@@ -14,7 +14,7 @@ jobs:
                      [ubuntu-20.04, Dockerfile.ubuntu-20.04, 'linux/amd64,linux/ppc64le,linux/arm64'],
                      [centos-7, Dockerfile.centos-7, 'linux/amd64,linux/ppc64le,linux/arm64'],
                      [centos-8, Dockerfile.centos-8, 'linux/amd64,linux/ppc64le,linux/arm64'],
-                     [fedora, Dockerfile.fedora, 'linux/amd64,linux/ppc64le,linux/arm64']]
+                     [fedora, Dockerfile.fedora, 'linux/amd64,linux/ppc64le,linux/arm64']] # linux/ppc64le can fail
 
     name: Build ${{ matrix.dockerfile[0] }}
     steps:

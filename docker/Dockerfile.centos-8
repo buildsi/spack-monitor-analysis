@@ -8,6 +8,7 @@ COPY --from=gobase /src/ /src/
 ENV PATH /usr/local/go/bin:/src/:${PATH}
 ENV TZ=America/Los_Angeles
 RUN yum update -y \
+      && yum --disablerepo=epel -y update  ca-certificates && \
       && yum install -y epel-release \
       && yum install -y \
       autoconf \

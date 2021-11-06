@@ -10,7 +10,7 @@ ENV PATH /usr/local/go/bin:/src/:${PATH}
 
 ENV TZ=America/Los_Angeles
 
-RUN dnf update -y \
+RUN dnf update --refresh -y \
       && dnf install -y \
       autoconf \
       automake \
