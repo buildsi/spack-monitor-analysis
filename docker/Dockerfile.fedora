@@ -17,7 +17,7 @@ RUN dnf update -y \
       bzip2 \
       cpio \
       curl \
-      clingo \
+      clang \
       file \
       findutils \
       g++ \
@@ -45,7 +45,6 @@ RUN dnf update -y \
       wget \
       xz \
       zlib-devel \
-      clang \
   && dnf autoremove -y \
   && dnf clean all
 
@@ -55,7 +54,7 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
 
 ENV SPACK_ROOT=/opt/spack
     
-RUN git clone -b vsoch/db-17 --depth 1 https://github.com/vsoch/spack /opt/spack && \
+RUN git clone -b vsoch/db-17 https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
     spack compiler find && \

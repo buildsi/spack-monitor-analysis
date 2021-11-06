@@ -13,6 +13,7 @@ RUN yum update -y \
       autoconf \
       automake \
       bzip2 \
+      clang \
       cpio \
       curl \
       file \
@@ -41,9 +42,7 @@ RUN yum update -y \
       unzip \
       wget \
       xz \
-      zlib-devel \
-      clang \
-      
+      zlib-devel \      
   && yum autoremove -y \
   && yum clean all
 
