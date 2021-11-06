@@ -40,6 +40,7 @@ RUN yum update -y \
       rsync \
       unzip \
       wget \
+      xz \
       zlib-devel \
       clang \
       
@@ -53,7 +54,7 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
  && rm -rf ~/.cache
 
 
-RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
+RUN git clone -b vsoch/db-17 https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
     spack compiler find

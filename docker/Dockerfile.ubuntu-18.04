@@ -44,6 +44,7 @@ RUN apt update -y \
       rsync \
       unzip \
       wget \
+      xz \
       zlib1g-dev \
       clang \
   && locale-gen en_US.UTF-8 \
@@ -57,7 +58,7 @@ RUN python3 -m pip install --upgrade pip setuptools wheel \
 
 ENV SPACK_ROOT=/opt/spack    
 
-RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
+RUN git clone -b vsoch/db-17 https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
     spack compiler find

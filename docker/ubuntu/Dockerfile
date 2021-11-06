@@ -42,6 +42,7 @@ RUN apt update -y \
       rsync \
       unzip \
       wget \
+      xz \
       zlib1g-dev \
       clang \
   && locale-gen en_US.UTF-8 \
@@ -61,7 +62,7 @@ RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh && 
 ENV PATH=/opt/anaconda3/bin:$PATH
 ENV SPACK_ROOT=/opt/spack
     
-RUN git clone -b vsoch/db https://github.com/vsoch/spack /opt/spack && \
+RUN git clone -b vsoch/db-17 https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
     spack compiler find
