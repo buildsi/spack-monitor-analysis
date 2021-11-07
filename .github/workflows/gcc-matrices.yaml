@@ -76,7 +76,7 @@ jobs:
     - name: Pull Docker Layers
       env:
         container: ${{ matrix.result.container_name }}
-      run: docker pull ${container} || exit 0
+      run: docker pull ghcr.io/buildsi/${container} || exit 0
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
@@ -98,7 +98,6 @@ jobs:
         echo "${prefix} -t ${container} ."
         build_args="$(echo "${prefix#*--build-arg}")"
         # Add build-arg for anaconda download
-        build_args="$build_args --build-arg anaconda_url=${{ matrix.arch[1] }}"
         echo "dockerfile_dir=${basedir}" >> $GITHUB_ENV
         echo "build_args=${build_args}" >> $GITHUB_ENV
         echo "container=${container}" >> $GITHUB_ENV
@@ -111,7 +110,9 @@ jobs:
         file: ${{ env.filename }}
         platforms: ${{ matrix.arch[0] }}
         load: true
-        build-args: ${{ env.build_args }}
+        build-args: |
+          ${{ env.build_args }}
+          anaconda_url=${{ matrix.arch[1] }}
         tags: ghcr.io/buildsi/${{ env.container }}
 
     - name: Derive Compiler Labels
@@ -130,6 +131,8 @@ jobs:
         file: ${{ env.filename }}
         platforms: ${{ matrix.arch[0] }}
         push: ${{ github.event_name != 'pull_request' }}
-        build-args: ${{ env.build_args }}
+        build-args: |
+            ${{ env.build_args }}
+            anaconda_url=${{ matrix.arch[1] }}
         tags: ghcr.io/buildsi/${{ env.container }}
         labels: ${{ steps.labels.outputs.compiler_labels }}
