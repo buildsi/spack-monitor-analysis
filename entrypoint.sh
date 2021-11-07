@@ -6,7 +6,8 @@ if [ "$#" -eq 0 ]; then
 fi
 
 pkg="${1}"
-analyzer="${2:-symbolator}"
+compiler="${2:-all}"
+analyzer="${3:-symbolator}"
 
 # Ensure we have SPACKMON_USER/SPACKMON_TOKEN in environment
 use_monitor="true"
@@ -45,17 +46,38 @@ export SPACK_ADD_DEBUG_FLAGS=true
 # Just in case this was not run (but it should have been!)
 spack compiler find
 
-# Run a build for each pkg spec, all versions
-for compiler in $(spack compiler list --flat); do
+if [[ "${compiler}" == "all" ]]; then
+    # Run a build for each pkg spec, all versions
+    for compiler in $(spack compiler list --flat); do
+        if [[ "${use_monitor}" == "true" ]]; then
+            printf "spack install --monitor --monitor-host xxxxxxxxxx --all --monitor-tag ${analyzer} $pkg ${compiler}\n"
+            spack install --monitor --monitor-host "${SPACKMON_HOST}" --all --monitor-tag "${analyzer}" "$pkg %$compiler"
+            printf "spack analyze --monitor --monitor-host xxxxxxxxxx run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
+            spack analyze --monitor --monitor-host "${SPACKMON_HOST}" run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
+        else
+            printf "spack install --all $pkg $compiler\n"
+            spack install --deprecated --all "$pkg %$compiler"
+            printf "spack analyze run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
+            spack analyze run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
+        fi
+    done
+else 
+
+    # If we are given a compiler, add spack syntax around it
+    if [ "${compiler}" != "" ]; then
+        compiler="%${compiler}"
+    done 
+
+    # Assume just running for one compiler
     if [[ "${use_monitor}" == "true" ]]; then
         printf "spack install --monitor --monitor-host xxxxxxxxxx --all --monitor-tag ${analyzer} $pkg ${compiler}\n"
-        spack install --deprecated --monitor --monitor-host "${SPACKMON_HOST}" --all --monitor-tag "${analyzer}" "$pkg %$compiler"
+        spack install --monitor --monitor-host "${SPACKMON_HOST}" --all --monitor-tag "${analyzer}" "$pkg $compiler"
         printf "spack analyze --monitor --monitor-host xxxxxxxxxx run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
-        spack analyze --monitor --monitor-host "${SPACKMON_HOST}" run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
+        spack analyze --monitor --monitor-host "${SPACKMON_HOST}" run --analyzer "${analyzer}" --recursive --all "$pkg $compiler"
     else
         printf "spack install --all $pkg $compiler\n"
         spack install --deprecated --all "$pkg %$compiler"
         printf "spack analyze run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
-        spack analyze run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
+        spack analyze run --analyzer "${analyzer}" --recursive --all "$pkg $compiler"
     fi
-done
+fi
