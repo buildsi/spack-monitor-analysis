@@ -49,12 +49,12 @@ spack compiler find
 for compiler in $(spack compiler list --flat); do
     if [[ "${use_monitor}" == "true" ]]; then
         printf "spack install --monitor --monitor-host xxxxxxxxxx --all --monitor-tag ${analyzer} $pkg ${compiler}\n"
-        spack install --monitor --monitor-host "${SPACKMON_HOST}" --all --monitor-tag "${analyzer}" "$pkg %$compiler"
+        spack install --deprecated --monitor --monitor-host "${SPACKMON_HOST}" --all --monitor-tag "${analyzer}" "$pkg %$compiler"
         printf "spack analyze --monitor --monitor-host xxxxxxxxxx run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
         spack analyze --monitor --monitor-host "${SPACKMON_HOST}" run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
     else
         printf "spack install --all $pkg $compiler\n"
-        spack install --all "$pkg %$compiler"
+        spack install --deprecated --all "$pkg %$compiler"
         printf "spack analyze run --analyzer ${analyzer} --recursive --all $pkg $compiler\n"
         spack analyze run --analyzer "${analyzer}" --recursive --all "$pkg %$compiler"
     fi
