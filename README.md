@@ -12,7 +12,7 @@ I'm not sure if this will all work, but it sounded fun to try.
 
 ## Instructions
 
-### Updating base containers
+### Building base containers
 
 The base containers are built with the following GitHub workflows:
 
@@ -27,6 +27,27 @@ To run any of these updates, simply push to a branch, navigate to the "Actions" 
 
 And click "Run workflow" and select the branch to trigger. The finished containers will then be pushed to GitHub packages and ready
 for use by the analysis pipeline.
+
+### Updating base containers
+
+To do any analysis, we split jobs into operating system (containers) by compilers (also in containers). To get the maximum out of each 6 hour run, we generate a matrix of container and compiler combinations by way of a simple Python script. For example, a base container should be built with a label of:
+
+```bash
+compiler_labels=gcc@7.5.0,gcc@9.5.0
+```
+
+And then we can programatically discover this set of labels via the image config from the packages registry, and run a script
+to parse these labels!
+
+```bash
+$ python scripts/generate-matrix.py 
+::set-output name=containers::[["ghcr.io/buildsi/spack-ubuntu-18.04", "all"], ["ghcr.io/buildsi/spack-ubuntu-20.04", "all"], ["ghcr.io/buildsi/spack-centos-7", "all"], ["ghcr.io/buildsi/spack-centos-8", "all"], ["ghcr.io/buildsi/spack-fedora", "all"], ["ghcr.io/buildsi/ubuntu:gcc-8.1.0", "all"], ["ghcr.io/buildsi/ubuntu:gcc-7.3.0", "all"], ["ghcr.io/buildsi/ubuntu:gcc-9.4.0", "all"], ["ghcr.io/buildsi/ubuntu:gcc-11.2.0", "all"], ["ghcr.io/buildsi/ubuntu:gcc-4.9.4", "all"], ["ghcr.io/buildsi/ubuntu:gcc-10.3.0", "all"]]
+```
+
+So if you need to add a new container base, add the name in the script [scripts/generate-matrix.py](scripts/generate-matrix.py).
+If a container does not have compiler labels, then the label "all" is used, and the compilers are programatically discovered in the container.
+This can work okay for smaller packages, but for long package builds across versions and compilers, we typically go over the 6 hour limit.
+
 
 ### Running an Analysis
 
