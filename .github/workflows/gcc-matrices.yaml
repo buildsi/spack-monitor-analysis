@@ -109,7 +109,7 @@ jobs:
       with:
         context: ${{ env.dockerfile_dir }}
         file: ${{ env.filename }}
-        platform: ${{ matrix.arch[0] }}
+        platforms: ${{ matrix.arch[0] }}
         load: true
         build-args: ${{ env.build_args }}
         tags: ghcr.io/buildsi/${{ env.container }}
