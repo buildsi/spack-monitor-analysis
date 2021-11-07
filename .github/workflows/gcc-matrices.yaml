@@ -45,9 +45,9 @@ jobs:
 
                                # https://repo.anaconda.com/archive/
         arch: [['linux/amd64', 'Anaconda3-2021.05-Linux-x86_64.sh'],
-               ['linux/ppc64le', 'Anaconda3-2021.05-Linux-ppc64le.sh']]
+               # ['linux/ppc64le', 'Anaconda3-2021.05-Linux-ppc64le.sh']]
                # ['linux/arm64', 'Anaconda3-2021.05-Linux-aarch64.sh']]
-               # There is a bug with docker and arm, skipping for now
+               # We don't need other arches for now
 
     if: ${{ needs.generate.outputs.empty_matrix == 'false' }}
 

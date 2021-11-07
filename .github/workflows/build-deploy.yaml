@@ -10,14 +10,13 @@ jobs:
       fail-fast: false
       matrix:
                     # tag           dockerfile in docker/     platforms
-        dockerfile: [[ubuntu-18.04, Dockerfile.ubuntu-18.04],
-                     [ubuntu-20.04, Dockerfile.ubuntu-20.04],
-                     [centos-7, Dockerfile.centos-7],
-                     [centos-8, Dockerfile.centos-8],
-                     [fedora, Dockerfile.fedora]] # linux/ppc64le can fail
-        arch: ['linux/amd64','linux/ppc64le','linux/arm64']
+        dockerfile: [[ubuntu-18.04, Dockerfile.ubuntu-18.04, 'linux/amd64,linux/ppc64le,linux/arm64'],
+                     [ubuntu-20.04, Dockerfile.ubuntu-20.04, 'linux/amd64,linux/ppc64le,linux/arm64'],
+                     [centos-7, Dockerfile.centos-7, 'linux/amd64,linux/ppc64le,linux/arm64'],
+                     [centos-8, Dockerfile.centos-8, 'linux/amd64,linux/ppc64le,linux/arm64'],
+                     [fedora, Dockerfile.fedora, 'linux/amd64']] # others are very slow
 
-    name: Build ${{ matrix.dockerfile[0] }} ${{ matrix.arch }}
+    name: Build ${{ matrix.dockerfile[0] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -51,11 +50,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build ${{ matrix.dockerfile[1] }} ${{ matrix.arch }}
+      - name: Build ${{ matrix.dockerfile[1] }}
         uses: docker/build-push-action@v2
         with:
           file: docker/${{matrix.dockerfile[1]}}
-          platforms: ${{ matrix.arch }}
+          platforms: ${{ matrix.dockerfile[2] }}
           context: .
           load: true
           tags: ghcr.io/buildsi/${{ env.container }}
@@ -73,7 +72,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           file: docker/${{matrix.dockerfile[1]}}
-          platforms: ${{ matrix.arch }}
+          platforms: ${{ matrix.dockerfile[2] }}
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/buildsi/${{ env.container }}

@@ -18,7 +18,7 @@ jobs:
       packages: read
     outputs:
       containers: ${{ steps.generate.outputs.containers }}
-    name: Determine Container and Compiler Options
+    name: Generate Matrix
     steps:
       - name: Checkout
         uses: actions/checkout@v2
