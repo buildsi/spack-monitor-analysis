@@ -25,6 +25,7 @@ def main():
     # We will build up a matrix of containers and compilers
     matrix = []
     for container in containers:
+        print(container)
         response = requests.get("https://crane.ggcr.dev/config/%s" % container)
         if response.status_code != 200:
             sys.exit("Issue retrieving image config for % container: %s" %(container, response.reason))
@@ -37,6 +38,7 @@ def main():
         # programatically get labels or default to "all compilers in the image"
         for label in labels:
             matrix.append([container, label])
+    print(matrix)
     print("::set-output name=containers::%s\n" % json.dumps(matrix))
 
 if __name__ == "__main__":
