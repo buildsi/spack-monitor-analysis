@@ -119,7 +119,7 @@ jobs:
       run: |
         docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
         labels=$(echo $(tr '\r\n' ',' < compilers.txt))
-        labels="--label compilers=\"${labels}\""
+        labels="compilers=\"${labels}\""
         printf "Saving compiler labels ${labels}\n"         
         echo "compiler_labels=${labels}" >> $GITHUB_ENV
       

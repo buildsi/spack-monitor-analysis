@@ -5,6 +5,7 @@ if [ "$#" -eq 0 ]; then
     exit 1
 fi
 
+
 pkg="${1}"
 compiler="${2:-all}"
 analyzer="${3:-symbolator}"

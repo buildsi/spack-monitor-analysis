@@ -1,5 +1,6 @@
 name: Spack Monitor Analysis
 on:
+  pull_request: []
   workflow_dispatch: 
     inputs:
       package:
@@ -11,36 +12,37 @@ on:
         default: 'symbolator'
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest    
+    permissions:
+      packages: read
+    name: Determine Container and Compiler Options
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Generate matrix
+        run: python generate-matrix.py
+  
   build:
     runs-on: ubuntu-latest
+    needs:
+      - prepare
     permissions:
       packages: read
     strategy:
       fail-fast: false
       matrix:
-                    # These containers have one tag (latest) across architectures
-        container: ['ghcr.io/buildsi/spack-ubuntu-18.04',
-                    'ghcr.io/buildsi/spack-ubuntu-20.04',
-                    'ghcr.io/buildsi/spack-centos-7',
-                    'ghcr.io/buildsi/spack-centos-8',
-                    'ghcr.io/buildsi/spack-fedora',
-                    
-                    # These have tags corresponding to gcc version and only amd64
-                    'ghcr.io/buildsi/ubuntu:gcc-8.1.0',
-                    'ghcr.io/buildsi/ubuntu:gcc-7.3.0',
-                    'ghcr.io/buildsi/ubuntu:gcc-9.4.0',
-                    'ghcr.io/buildsi/ubuntu:gcc-11.2.0',
-                    'ghcr.io/buildsi/ubuntu:gcc-4.9.4',
-                    'ghcr.io/buildsi/ubuntu:gcc-10.3.0']
-
+        # Each entry is a container, and then compiler within it
+        container: ${{ fromJson(needs.prepare.outputs.containers) }}
         arch: ['linux/amd64'] # ,'linux/ppc64le','linux/arm64']
-        package: ["${{ github.event.inputs.package }}"]
+        #package: ["${{ github.event.inputs.package }}"]
+        package: ["zlib"]
 
     container:
-      image: ${{ matrix.container }}
+      image: ${{ matrix.container[0] }}
       options: "--platform=${{ matrix.arch }}"
 
-    name: ${{ matrix.package }} ${{ matrix.container }} ${{ matrix.arch }}
+    name: ${{ matrix.package }} ${{ matrix.container[0] }} ${{ matrix.container[1] }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -57,5 +59,5 @@ jobs:
           SPACKMON_TOKEN: ${{ secrets.SPACKMON_TOKEN }}
           SPACKMON_HOST: ${{ secrets.SPACKMON_HOST }}
         run: |
-           printf "Preparing to build ${{ matrix.package }}\n"
-           /bin/bash ./entrypoint.sh ${{ matrix.package }}
+           printf "Preparing to build ${{ matrix.package }} ${{ matrix.container[1] }}\n"
+           /bin/bash ./entrypoint.sh ${{ matrix.package }} ${{ matrix.container[1] }}
