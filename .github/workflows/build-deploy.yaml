@@ -61,7 +61,7 @@ jobs:
       - name: Derive Compiler Labels
         id: labels
         run: |
-          docker run -i --rm ghcr.io/buildsi/${{ env.container }} > compilers.txt
+          docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
           labels=$(echo $(tr '\r\n' ',' < compilers.txt))
           labels="--label compilers=\"${labels}\""
           printf "Saving compiler labels ${labels}\n"         
