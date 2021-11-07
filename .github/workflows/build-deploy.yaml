@@ -71,5 +71,5 @@ jobs:
           file: docker/${{matrix.dockerfile[1]}}
           platforms: ${{ matrix.dockerfile[2] }}
           push: ${{ github.event_name != 'pull_request' }}
-          labels: ${{ steps.labels.outputs.labels }}
+          labels: ${{ steps.labels.outputs.compiler_labels }}
           tags: ghcr.io/buildsi/${{ env.container }}
