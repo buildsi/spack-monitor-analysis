@@ -134,4 +134,4 @@ jobs:
             ${{ env.build_args }}
             anaconda_url=${{ matrix.arch[1] }}
         tags: ghcr.io/buildsi/${{ env.container }}
-        labels: ${{ steps.labels.outputs.compiler_labels }}
+        labels: ${{ env.compiler_labels }}

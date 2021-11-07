@@ -77,4 +77,4 @@ jobs:
           context: .
           push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/buildsi/${{ env.container }}
-          labels: ${{ steps.labels.outputs.compiler_labels }}
+          labels: ${{ env.compiler_labels }}
