@@ -17,7 +17,7 @@ jobs:
                      [fedora, Dockerfile.fedora]] # linux/ppc64le can fail
         arch: ['linux/amd64','linux/ppc64le','linux/arm64']
 
-    name: Build ${{ matrix.dockerfile[0] }} ${{ matrix.arch }}"
+    name: Build ${{ matrix.dockerfile[0] }} ${{ matrix.arch }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -65,7 +65,7 @@ jobs:
         run: |
           docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
           labels=$(echo $(tr '\r\n' ',' < compilers.txt))
-          labels="compilers=\"${labels}\""
+          labels="org.spack.compilers=${labels}"
           printf "Saving compiler labels ${labels}\n"         
           echo "compiler_labels=${labels}" >> $GITHUB_ENV
       
