@@ -108,7 +108,7 @@ jobs:
 
     - name: Derive Compiler Labels
       id: labels
-      run:
+      run: |
         docker run -i --rm ghcr.io/buildsi/${{ env.container }} > compilers.txt
         labels=$(echo $(tr '\r\n' ',' < compilers.txt))
         labels="--label compilers=\"${labels}\""
