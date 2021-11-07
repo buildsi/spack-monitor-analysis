@@ -21,7 +21,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Generate matrix
-        run: python scripts/generate-matrix.py
+        run: |
+            pip install requests
+            python scripts/generate-matrix.py
   
   build:
     runs-on: ubuntu-latest

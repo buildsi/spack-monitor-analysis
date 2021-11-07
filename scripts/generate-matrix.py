@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import requests
 import sys
@@ -37,7 +37,6 @@ def main():
         # programatically get labels or default to "all compilers in the image"
         for label in labels:
             matrix.append([container, label])
-    
     print("::set-output name=containers::%s\n" % json.dumps(matrix))
 
 if __name__ == "__main__":
