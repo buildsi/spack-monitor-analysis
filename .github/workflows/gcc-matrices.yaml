@@ -94,6 +94,24 @@ jobs:
         echo "build_args=${build_args}" >> $GITHUB_ENV
         echo "container=${container}" >> $GITHUB_ENV
         echo "filename=${filename}" >> $GITHUB_ENV
+
+    - name: Build ${{ matrix.dockerfile[1] }}
+      uses: docker/build-push-action@v2
+      with:
+        context: ${{ env.dockerfile_dir }}
+        file: ${{ env.filename }}
+        load: true
+        build-args: ${{ env.build_args }}
+        tags: ghcr.io/buildsi/${{ env.container }}
+
+    - name: Derive Compiler Labels
+      id: labels
+      run: |
+        docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
+        labels=$(echo $(tr '\r\n' ',' < compilers.txt))
+        labels="--label compilers=\"${labels}\""
+        printf "Saving compiler labels ${labels}\n"         
+        echo "compiler_labels=${labels}" >> $GITHUB_ENV
       
     - name: Build & Deploy ${{ matrix.dockerfile[1] }}
       uses: docker/build-push-action@v2
@@ -104,3 +122,4 @@ jobs:
         push: ${{ github.event_name != 'pull_request' }}
         build-args: ${{ env.build_args }}
         tags: ghcr.io/buildsi/${{ env.container }}
+        labels: ${{ steps.labels.outputs.labels }}
