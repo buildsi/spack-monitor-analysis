@@ -1,7 +1,5 @@
 name: Build Containers
-on: 
-  workflow_dispatch: []
-  pull_request: []
+on: workflow_dispatch
 
 jobs:
   build:
@@ -19,7 +17,7 @@ jobs:
                      [fedora, Dockerfile.fedora]] # linux/ppc64le can fail
         arch: ['linux/amd64','linux/ppc64le','linux/arm64']
 
-    name: Build ${{ matrix.dockerfile[0] }}
+    name: Build ${{ matrix.dockerfile[0] }} ${{ matrix.arch }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -77,18 +75,3 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/buildsi/${{ env.container }}
           labels: ${{ steps.labels.outputs.compiler_labels }}
-
-#      - name: Derive Compiler Labels
-#        id: labels
-#        run: |
-#          docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
-#          labels=$(echo $(tr '\r\n' ',' < compilers.txt))
-#          labels="--label compilers=\"${labels}\""
-          # Issue same build command to add labels (hopefully uses cache...)
-#          printf "docker buildx build --tag ghcr.io/buildsi/${{ env.container }} --platform linux/amd64,linux/ppc64le,linux/arm64 ${labels} --file docker/${{matrix.dockerfile[1]}}\n"
-#          docker buildx build --tag ghcr.io/buildsi/${{ env.container }} --platform linux/amd64,linux/ppc64le,linux/arm64 ${labels} --file docker/${{matrix.dockerfile[1]}}
-            
-#      - name: Deploy ${{ matrix.dockerfile[1] }}
-#       if: ${{ github.event_name != 'pull_request' }}
-#        run:
-#            docker push --all-tags ghcr.io/buildsi/${{ env.container }}

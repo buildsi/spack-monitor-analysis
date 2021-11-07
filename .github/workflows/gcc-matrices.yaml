@@ -44,11 +44,15 @@ jobs:
       fail-fast: false
       matrix:
         result: ${{ fromJson(needs.generate.outputs.dockerbuild_matrix) }}
-        arch: ['linux/amd64','linux/ppc64le','linux/arm64']
+
+                               # https://repo.anaconda.com/archive/
+        arch: [['linux/amd64', 'Anaconda3-2021.05-Linux-x86_64.sh'],
+               ['linux/ppc64le', 'Anaconda3-2021.05-Linux-ppc64le.sh']
+               ['linux/arm64', 'Anaconda3-2021.05-Linux-aarch64.sh']]
 
     if: ${{ needs.generate.outputs.empty_matrix == 'false' }}
 
-    name: "Build ${{ matrix.result.container_name }} ${{ matrix.arch }}" 
+    name: "Build ${{ matrix.result.container_name }} ${{ matrix.arch[0] }}" 
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
@@ -93,6 +97,8 @@ jobs:
         cd $basedir
         echo "${prefix} -t ${container} ."
         build_args="$(echo "${prefix#*--build-arg}")"
+        # Add build-arg for anaconda download
+        build_args="$build_args --build-arg anaconda_url=${{ matrix.arch[1] }}"
         echo "dockerfile_dir=${basedir}" >> $GITHUB_ENV
         echo "build_args=${build_args}" >> $GITHUB_ENV
         echo "container=${container}" >> $GITHUB_ENV
@@ -103,7 +109,7 @@ jobs:
       with:
         context: ${{ env.dockerfile_dir }}
         file: ${{ env.filename }}
-        platform: ${{ matrix.arch }}
+        platform: ${{ matrix.arch[0] }}
         load: true
         build-args: ${{ env.build_args }}
         tags: ghcr.io/buildsi/${{ env.container }}
@@ -122,7 +128,7 @@ jobs:
       with:
         context: ${{ env.dockerfile_dir }}
         file: ${{ env.filename }}
-        platforms: ${{ matrix.arch }}
+        platforms: ${{ matrix.arch[0] }}
         push: ${{ github.event_name != 'pull_request' }}
         build-args: ${{ env.build_args }}
         tags: ghcr.io/buildsi/${{ env.container }}

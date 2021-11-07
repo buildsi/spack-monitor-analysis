@@ -6,7 +6,9 @@ COPY --from=gobase /usr/local/go/ /usr/local/go/
 COPY --from=gobase /src/ /src/
 ENV PATH /usr/local/go/bin:/src/:${PATH}
 
-ARG DEBIAN_FRONTEND=noninteractive
+ARG anaconda_url
+ENV anaconda_url=${anaconda_url}
+ENV DEBIAN_FRONTEND=noninteractive
 ENV TZ=America/Los_Angeles
 
 RUN apt update -y \
@@ -53,8 +55,8 @@ RUN apt update -y \
   && ln -s `which python3` /usr/bin/python || echo "No python 3"
 
 
-RUN wget https://repo.anaconda.com/archive/Anaconda3-2021.05-Linux-x86_64.sh && \
-    bash Anaconda3-2021.05-Linux-x86_64.sh -p /opt/anaconda3 -b && \
+RUN wget https://repo.anaconda.com/archive/${anaconda_url} && \
+    bash ${anaconda_url} -p /opt/anaconda3 -b && \
     export PATH=/opt/anaconda3/bin:$PATH && \
     python -m pip install --upgrade pip setuptools wheel && \
     python -m pip install gnureadline boto3 pyyaml pytz minio requests clingo 
