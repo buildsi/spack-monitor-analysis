@@ -67,7 +67,7 @@ else
     # If we are given a compiler, add spack syntax around it
     if [ "${compiler}" != "" ]; then
         compiler="%${compiler}"
-    done 
+    fi 
 
     # Assume just running for one compiler
     if [[ "${use_monitor}" == "true" ]]; then
