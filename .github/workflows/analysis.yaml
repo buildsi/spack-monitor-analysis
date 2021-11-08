@@ -1,6 +1,5 @@
 name: Spack Monitor Analysis
 on:
-  pull_request: []
   workflow_dispatch: 
     inputs:
       package:
@@ -40,9 +39,8 @@ jobs:
         # Each entry is a container, and then compiler within it
         container: ${{ fromJson(needs.prepare.outputs.containers) }}
         arch: ['linux/amd64'] # ,'linux/ppc64le','linux/arm64']
-        #package: ["${{ github.event.inputs.package }}"]
-        package: ["zlib"]
-
+        package: ["${{ github.event.inputs.package }}"]
+        
     container:
       image: ${{ matrix.container[0] }}
       options: "--platform=${{ matrix.arch }}"
