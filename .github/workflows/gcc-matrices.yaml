@@ -44,10 +44,10 @@ jobs:
         result: ${{ fromJson(needs.generate.outputs.dockerbuild_matrix) }}
 
                                # https://repo.anaconda.com/archive/
-        arch: [['linux/amd64', 'Anaconda3-2021.05-Linux-x86_64.sh'],
-               ['linux/ppc64le', 'Anaconda3-2021.05-Linux-ppc64le.sh']]
+        arch: [['linux/amd64', 'Anaconda3-2021.05-Linux-x86_64.sh']]
+               # ['linux/ppc64le', 'Anaconda3-2021.05-Linux-ppc64le.sh']]
                # ['linux/arm64', 'Anaconda3-2021.05-Linux-aarch64.sh']]
-               # There is a bug with docker and arm, skipping for now
+               # We don't need other arches for now
 
     if: ${{ needs.generate.outputs.empty_matrix == 'false' }}
 
@@ -119,7 +119,7 @@ jobs:
       run: |
         docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
         labels=$(echo $(tr '\r\n' ',' < compilers.txt))
-        labels="--label compilers=\"${labels}\""
+        labels="org.spack.compilers=${labels}"
         printf "Saving compiler labels ${labels}\n"         
         echo "compiler_labels=${labels}" >> $GITHUB_ENV
       
@@ -134,4 +134,4 @@ jobs:
             ${{ env.build_args }}
             anaconda_url=${{ matrix.arch[1] }}
         tags: ghcr.io/buildsi/${{ env.container }}
-        labels: ${{ steps.labels.outputs.compiler_labels }}
+        labels: ${{ env.compiler_labels }}
