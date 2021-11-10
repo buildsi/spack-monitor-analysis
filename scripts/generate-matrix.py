@@ -20,6 +20,7 @@ containers = [
     "ghcr.io/buildsi/ubuntu:gcc-10.3.0",
 ]
 
+
 def main():
 
     # We will build up a matrix of containers and compilers
@@ -28,11 +29,14 @@ def main():
         print(container)
         response = requests.get("https://crane.ggcr.dev/config/%s" % container)
         if response.status_code != 200:
-            sys.exit("Issue retrieving image config for % container: %s" %(container, response.reason))
-        config=response.json()
-        labels = config['config'].get('Labels', {}).get("org.spack.compilers")
+            sys.exit(
+                "Issue retrieving image config for % container: %s"
+                % (container, response.reason)
+            )
+        config = response.json()
+        labels = config["config"].get("Labels", {}).get("org.spack.compilers")
         if not labels:
-            labels = ["all"]        
+            labels = ["all"]
         else:
             labels = [x for x in labels.strip(",").split(",") if x]
         # programatically get labels or default to "all compilers in the image"
@@ -40,6 +44,7 @@ def main():
             matrix.append([container, label])
     print(matrix)
     print("::set-output name=containers::%s\n" % json.dumps(matrix))
+
 
 if __name__ == "__main__":
     main()
