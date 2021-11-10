@@ -136,14 +136,26 @@ $ cd scripts
 $ python visualize-predictions.py ~/.spack/spack-monitor/analysis/curl/symbolator-predictions.json
 ```
 
-The result is then saved in [results/curl](results/curl) with the data frame of predictions, where:
+The result is then saved in [scripts/results/curl](scripts/results/curl) with the data frame of predictions, where:
 
  - 1: the splice is predicted to work
  - 0: we don't know, this combination was not tested
  - -1: the splice is predicted to not work
 
 And we save each of the original data file, a matrix (pandas data frame) exported of binaries (X) by splices (Y)
-and a PDF that has the seaborn heatmap. Note that this dummy analysis assumes a complete splice - e.g., that if a splice has a dependency that is used by the binary, we remove the original and replace with the splice. If this isn't accurate, we will likely see a lot of False
+and a PDF that has the seaborn heatmap.
+
+```bash
+$ tree scripts/results/curl/
+scripts/results/curl/
+├── curl.csv
+├── curl.pdf
+└── symbolator-predictions.json
+
+0 directories, 3 files
+```
+
+Note that this dummy analysis assumes a complete splice - e.g., that if a splice has a dependency that is used by the binary, we remove the original and replace with the splice. If this isn't accurate, we will likely see a lot of False
 negatives for missing symbols. We can update the script to include *both* in the symbol space if that is a better approach.
 
 For next steps, when Nate's splicing is available we can hopefully validate some of our splicing predictions. Then
