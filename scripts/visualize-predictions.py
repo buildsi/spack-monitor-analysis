@@ -9,6 +9,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 
+import shutil
 import pandas
 import sys
 import json
@@ -79,10 +80,13 @@ def main(result_file):
         count += 1
 
     # Save the data frame to file
-    result_dir = os.path.join(here, "results")
+    result_dir = os.path.join(here, "results", package)
     if not os.path.exists(result_dir):
-        os.mkdir(result_dir)
+        os.makedirs(result_dir)
 
+    # Copy the original data file there
+    copied_file = os.path.join(result_dir, os.path.basename(result_file))
+    shutil.copyfile(result_file, copied_file)
     result_file = os.path.join(result_dir, "%s.csv" % package)
     df.to_csv(result_file)
     save_to = os.path.join(result_dir, "%s.pdf" % package)
