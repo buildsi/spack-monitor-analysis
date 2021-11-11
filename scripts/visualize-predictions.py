@@ -91,7 +91,13 @@ def main(result_file):
     result_file = os.path.join(result_dir, "%s.csv" % package)
     df.to_csv(result_file)
     save_to = os.path.join(result_dir, "%s.pdf" % package)
-    plot_heatmap(df, save_to)
+    fig = plot_heatmap(df, save_to)
+    
+    # save a png and svg too too
+    save_to = os.path.join(result_dir, "%s.png" % package)
+    plt.savefig(save_to)
+    save_to = os.path.join(result_dir, "%s.svg" % package)
+    plt.savefig(save_to)
 
 
 if __name__ == "__main__":
