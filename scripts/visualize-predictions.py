@@ -32,12 +32,13 @@ def plot_heatmap(df, save_to=None):
     cmap = sns.diverging_palette(230, 20, as_cmap=True)
 
     # Draw the heatmap with the mask and correct aspect ratio
-    p = sns.heatmap(
+    p = sns.clustermap(
         df, cmap=cmap, center=0, square=True, linewidths=0.5, cbar_kws={"shrink": 0.5}
     )
-    p.tick_params(labelsize=5)
-    p.set_xlabel("Splice", fontsize=12)
-    p.set_ylabel("Binary", fontsize=12)
+    # used for heatmap
+    # p.tick_params(labelsize=5)
+    # p.set_xlabel("Splice", fontsize=12)
+    # p.set_ylabel("Binary", fontsize=12)
 
     if save_to:
         plt.savefig(save_to)
