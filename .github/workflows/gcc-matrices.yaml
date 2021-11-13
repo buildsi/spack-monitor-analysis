@@ -96,7 +96,6 @@ jobs:
         cd $basedir
         echo "${prefix} -t ${container} ."
         build_args="$(echo "${prefix#*--build-arg}")"
-        # Add build-arg for anaconda download
         echo "dockerfile_dir=${basedir}" >> $GITHUB_ENV
         echo "build_args=${build_args}" >> $GITHUB_ENV
         echo "container=${container}" >> $GITHUB_ENV
@@ -122,12 +121,14 @@ jobs:
         labels="org.spack.compilers=${labels}"
         printf "Saving compiler labels ${labels}\n"         
         echo "compiler_labels=${labels}" >> $GITHUB_ENV
+        # Prepare to use base image and add labels
+        echo "FROM ghcr.io/buildsi/${{ env.container }}" > Dockerfile
       
     - name: Deploy ${{ matrix.dockerfile[1] }}
       uses: docker/build-push-action@v2
       with:
         context: ${{ env.dockerfile_dir }}
-        file: ${{ env.filename }}
+        file: Dockerfile
         platforms: ${{ matrix.arch[0] }}
         push: ${{ github.event_name != 'pull_request' }}
         build-args: |
