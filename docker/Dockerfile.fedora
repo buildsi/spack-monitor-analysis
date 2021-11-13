@@ -38,6 +38,7 @@ RUN dnf update --refresh -y \
       libstdc++-static \
       openssl-devel \
       libxml2-devel \
+      libtool \
       m4 \
       make \
       mercurial \

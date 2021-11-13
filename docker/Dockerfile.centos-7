@@ -31,6 +31,7 @@ RUN yum update -y \
       libffi-devel \
       openssl-devel \
       libxml2-devel \
+      libtool \
       m4 \
       make \
       mercurial \

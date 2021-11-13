@@ -27,6 +27,7 @@ RUN yum update -y \
       iputils \
       jq \
       libffi-devel \
+      libtool \
       openssl-devel \
       libxml2-devel \
       m4 \

@@ -31,6 +31,7 @@ RUN apt update -y \
       jq \
       libffi-dev \
       libssl-dev \
+      libtool \
       libxml2-dev \
       locales \
       locate \
