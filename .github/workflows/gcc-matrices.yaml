@@ -56,6 +56,9 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v2
 
+    - name: Display GitHub Action architecture
+      run: lscpu
+
     - name: GHCR Login
       if: (github.event_name != 'pull_request')
       uses: docker/login-action@v1 
@@ -108,30 +111,15 @@ jobs:
         context: ${{ env.dockerfile_dir }}
         file: ${{ env.filename }}
         platforms: ${{ matrix.arch[0] }}
-        load: true
+        push: ${{ github.event_name != 'pull_request' }}
         build-args: |
           ${{ env.build_args }}
           anaconda_url=${{ matrix.arch[1] }}
         tags: ghcr.io/buildsi/${{ env.container }}
 
-    - name: Derive Compiler Labels
-      id: labels
+    - name: Add Compiler Labels
       run: |
         docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
         labels=$(echo $(tr '\r\n' ',' < compilers.txt))
         labels="org.spack.compilers=${labels}"
-        printf "Saving compiler labels ${labels}\n"         
-        echo "compiler_labels=${labels}" >> $GITHUB_ENV
-      
-    - name: Deploy ${{ matrix.dockerfile[1] }}
-      uses: docker/build-push-action@v2
-      with:
-        context: ${{ env.dockerfile_dir }}
-        file: ${{ env.filename }}
-        platforms: ${{ matrix.arch[0] }}
-        push: ${{ github.event_name != 'pull_request' }}
-        build-args: |
-            ${{ env.build_args }}
-            anaconda_url=${{ matrix.arch[1] }}
-        tags: ghcr.io/buildsi/${{ env.container }}
-        labels: ${{ env.compiler_labels }}
+        printf "Adding compiler labels ${labels}\n"
