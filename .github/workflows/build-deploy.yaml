@@ -80,4 +80,4 @@ jobs:
           labels=$(echo $(tr '\r\n' '|' < compilers.txt))
           labels="org.spack.compilers=${labels}"
           printf "Saving compiler labels ${labels}\n"         
-          crane mutate ${{ env.container }} --label "${labels}"
+          crane mutate ghcr.io/buildsi/${{ env.container }} --label "${labels}"
