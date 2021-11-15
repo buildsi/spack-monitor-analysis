@@ -53,24 +53,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Deploy ${{ matrix.dockerfile[1] }}
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: docker/build-push-action@v2
-        with:
-          file: docker/${{matrix.dockerfile[1]}}
-          platforms: ${{ matrix.dockerfile[2] }}
-          context: .
-          push: true
-          tags: ghcr.io/buildsi/${{ env.container }}
-
       - name: Build ${{ matrix.dockerfile[1] }}
-        if: ${{ github.event_name == 'pull_request' }}
         uses: docker/build-push-action@v2
         with:
           file: docker/${{matrix.dockerfile[1]}}
           platforms: ${{ matrix.dockerfile[2] }}
           context: .
-          load: true
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/buildsi/${{ env.container }}
 
       - name: Label

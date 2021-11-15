@@ -64,11 +64,13 @@ RUN wget https://repo.anaconda.com/archive/${anaconda_url} && \
 
 ENV PATH=/opt/anaconda3/bin:$PATH
 ENV SPACK_ROOT=/opt/spack
+ENV SPACK_ADD_DEBUG_FLAGS=true
     
 RUN git clone -b vsoch/db-17 https://github.com/vsoch/spack /opt/spack && \
     cd /opt/spack && \
     . share/spack/setup-env.sh && \
-    spack compiler find
+    spack compiler find && \
+    spack install libabigail+docs
 
 RUN git clone https://github.com/buildsi/symbolator && \
     cd symbolator && \

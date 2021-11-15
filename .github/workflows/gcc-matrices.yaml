@@ -55,7 +55,8 @@ jobs:
     steps:
     - name: Checkout Repository
       uses: actions/checkout@v2
-
+    - uses: actions/setup-go@v2
+    - uses: imjasonh/setup-crane@01d26682810dcd47bfc8eb1efe791558123a9373
     - name: Display GitHub Action architecture
       run: lscpu
 
@@ -120,6 +121,7 @@ jobs:
     - name: Add Compiler Labels
       run: |
         docker run -i --rm ghcr.io/buildsi/${{ env.container }} spack compiler list --flat > compilers.txt
-        labels=$(echo $(tr '\r\n' ',' < compilers.txt))
+        labels=$(echo $(tr '\r\n' '|' < compilers.txt))
         labels="org.spack.compilers=${labels}"
         printf "Adding compiler labels ${labels}\n"
+        crane mutate ghcr.io/buildsi/${{ env.container }} --label "${labels}"
